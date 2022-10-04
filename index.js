@@ -3,23 +3,24 @@ const WebSocket = require ("ws");
 const axios = require('axios');
 const crypto = require ('crypto');
 
-const ws = new  WebSocket(process.env.STREAM_URL + "btcusdt@bookTicker");
+const ws = new  WebSocket(process.env.STREAM_URL + "btcusdt@markPrice@1s");
 
 let isOpened = false;
 
 ws.onmessage = async (event) => {
     const obj = JSON.parse(event.data);
     console.log("Symbol: " + obj.s);
-    console.log("Price: " + obj.a);
+    console.log("Mark Price: " + obj.p);
     
-    const price = parseFloat(obj.a);
-    if(price < 19557 && !isOpened){
-        console.log("Hora de comprar!");
+    const price = parseFloat(obj.p);
+
+    if(price < 20135 && !isOpened){
+        console.log("vender!");
         newOrder("BTCUSDT", "0.001", "BUY");
         isOpened = true;
     }
-    else if(price > 19565 && isOpened){
-        comsole.log("Vender!");
+    else if(price <= 20125 && isOpened){
+        console.log("hora de comprar!");
         newOrder("BTCUSDT","0.001", "SELL")
         isOpened = false;
     }
@@ -39,7 +40,7 @@ async function newOrder(symbol, quantity, side){
 
      const result = await axios({
         method: "POST",
-        url: process.env.API_URL + "/v3/order?" + new URLSearchParams(data),
+        url: process.env.API_URL + "/v1/order?" + new URLSearchParams(data),
         headers: {"X-MBX-APIKEY": process.env.API_KEY}
     })
     console.log(result.data);
