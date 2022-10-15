@@ -14,12 +14,12 @@ ws.onmessage = async (event) => {
     
     const price = parseFloat(obj.p);
 
-    if(price < 20135 && !isOpened){
+    if(price < 21235 && !isOpened){
         console.log("vender!");
         newOrder("BTCUSDT", "0.001", "BUY");
         isOpened = true;
     }
-    else if(price <= 20125 && isOpened){
+    else if(price <= 21125 && isOpened){
         console.log("hora de comprar!");
         newOrder("BTCUSDT","0.001", "SELL")
         isOpened = false;
